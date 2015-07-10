@@ -28,6 +28,8 @@ class SnippetsController < ApplicationController
 
     respond_to do |format|
       if @snippet.save
+        enqueue_snippet_highlighter
+
         format.html { redirect_to @snippet, notice: 'Snippet was successfully created.' }
         format.json { render :show, status: :created, location: @snippet }
       else
@@ -42,6 +44,10 @@ class SnippetsController < ApplicationController
   def update
     respond_to do |format|
       if @snippet.update(snippet_params)
+        @snippet.update_attribute(:highlighted_code, nil)
+
+        enqueue_snippet_highlighter
+
         format.html { redirect_to @snippet, notice: 'Snippet was successfully updated.' }
         format.json { render :show, status: :ok, location: @snippet }
       else
@@ -70,5 +76,12 @@ class SnippetsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def snippet_params
       params.require(:snippet).permit(:language, :plain_code)
+    end
+
+    def enqueue_snippet_highlighter
+      uri = URI.parse(Snippet::API_URI)
+      data = @snippet.api_post_data
+      request = Net::HTTP.post_form(uri, data)
+      @snippet.update_attribute(:highlighted_code, request.body)
     end
 end
