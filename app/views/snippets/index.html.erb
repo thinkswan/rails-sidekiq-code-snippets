@@ -6,8 +6,7 @@
   <thead>
     <tr>
       <th>Language</th>
-      <th>Plain code</th>
-      <th>Highlighted code</th>
+      <th>Code</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -15,12 +14,17 @@
   <tbody>
     <% @snippets.each do |snippet| %>
       <tr>
-        <td><%= snippet.language %></td>
-        <td><%= snippet.plain_code %></td>
-        <td><%= snippet.highlighted_code %></td>
-        <td><%= link_to 'Show', snippet %></td>
-        <td><%= link_to 'Edit', edit_snippet_path(snippet) %></td>
-        <td><%= link_to 'Destroy', snippet, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td valign="top"><%= snippet.language %></td>
+        <td>
+          <% if snippet.highlighted_code.present? %>
+            <%= raw snippet.highlighted_code %>
+          <% else %>
+            <pre><%= snippet.plain_code %></pre>
+          <% end %>
+        </td>
+        <td valign="top"><%= link_to 'Show', snippet %></td>
+        <td valign="top"><%= link_to 'Edit', edit_snippet_path(snippet) %></td>
+        <td valign="top"><%= link_to 'Destroy', snippet, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
