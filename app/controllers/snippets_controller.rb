@@ -79,9 +79,6 @@ class SnippetsController < ApplicationController
     end
 
     def enqueue_snippet_highlighter
-      uri = URI.parse(Snippet::API_URI)
-      data = @snippet.api_post_data
-      request = Net::HTTP.post_form(uri, data)
-      @snippet.update_attribute(:highlighted_code, request.body)
+      SnippetHighlighter.perform_async(@snippet.id)
     end
 end
