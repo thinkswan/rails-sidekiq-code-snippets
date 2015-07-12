@@ -26,9 +26,10 @@ If you prefer to install from source:
 
 * http://redis.io/download#installation
 
-#### Install gems and set project up
+#### Install gems and set database up
 
 ```
+gem install foreman
 bundle install
 bin/rake db:setup
 ```
@@ -36,8 +37,7 @@ bin/rake db:setup
 #### Start server and Sidekiq workers
 
 ```
-bin/rails server
-sidekiq
+foreman start
 ```
 
 This will start a server at http://localhost:3000.
